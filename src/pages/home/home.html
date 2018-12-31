@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons left>
+        <!-- Import -->        
+        <label for="fileimport" style="pointer-events: initial !important;">
+            <ion-icon name="cloud-upload" class="import-icon" title="Importer une chor&eacute;graphie depuis un fichier"></ion-icon>
+        </label>
+        <input id="fileimport" class="input-file" type="file" (change)="onFileImportChange($event)" #fileInput accept="plain/text" />
+        
+        <button *ngIf="steps != null" color="dark" ion-button icon-only (click)="play()" title="Jouer la chor&eacute;graphie"><ion-icon name="play"></ion-icon></button>
+        <button *ngIf="steps != null" color="dark" ion-button icon-only (click)="stop()" title="Arr&ecirc;ter la chor&eacute;graphie"><ion-icon name="square"></ion-icon></button>
+        
+        <span class="toolbar-text">
+            Point de vue
+            <select (change)="changePointOfView()" [(ngModel)]="pointOfView" class="input-editable">
+                <option *ngFor="let point of pointsOfView" [ngValue]="point.value">{{point.label}}</option>
+            </select>
+            <select (change)="changeViewMode()" [(ngModel)]="viewMode" class="input-editable">
+                <option *ngFor="let view of viewModes" [ngValue]="view.value">{{view.label}}</option>
+            </select>
+        </span>
+        
+        <!-- Musique -->
+        <span class="separator">|</span>
+        <span class="toolbar-text">Musique</span>
+        <label for="selectmusic" class="label-file" style="pointer-events: initial !important;">
+            <ion-icon name="musical-notes" class="music-icon" title="Associer une musique à la chor&eacute;graphie"></ion-icon>
+        </label>
+        <input id="selectmusic" class="input-file" type="file" (change)="onMusicFileChange($event)" #fileInput accept="audio/*" />
+        <ng-container *ngIf="musicInfo">
+            <span  class="toolbar-text">{{getMusicName()}}</span>
+        </ng-container>
+    </ion-buttons>
+    
+    <ion-buttons right>
+        <!-- Danseurs -->
+        <ng-container *ngIf="pawns">
+            <span class="toolbar-text">Danseurs</span>
+            <!-- Taille -->
+            <button color="dark" ion-button icon-only (touchstart)="startResizingDancers(-0.025)" (touchend)="stopResizingDancer()" (mousedown)="startResizingDancers(-0.025)" (mouseup)="stopResizingDancer()" title="Diminuer la taille des dancers">
+                <ion-icon name="contract"></ion-icon>
+            </button>
+            <button color="dark" ion-button icon-only (touchstart)="startResizingDancers(0.025)" (touchend)="stopResizingDancer()" (mousedown)="startResizingDancers(0.025)" (mouseup)="stopResizingDancer()" title="Augmenter la taille des danseurs">
+                <ion-icon name="expand"></ion-icon>
+            </button>
+        </ng-container>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <div #container></div>
+    <audio #music id="music" style="display: none" controls></audio>
+</ion-content>
